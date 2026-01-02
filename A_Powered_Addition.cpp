@@ -21,23 +21,21 @@ void solve(){
     for(int i = 0; i < n; i++) cin >> arr[i];
 
     int prev=arr[0];
-    int delta =-1;
-    int total=0;
-    for(int i=1;i<n;++i){
+    int ans =0;
 
-        while(arr[i]+total<prev){
-            delta++;
-            total+=1<<delta;
+    for(int i=1;i<n;++i){
+        if(arr[i]>=prev){
+            prev=arr[i];
+            continue;
         }
-        
-        for(int p=delta;arr[i]<prev && p>=0;--p){
-            arr[i]+=1<<p;
-        }
-        prev=arr[i];
+        int diff = prev-arr[i]; // this must be added
+        // k ≥ log2(diff + 1)
+        int k=ceil(log2(diff+1));
+        ans=max(ans,k);
         
     }
 
-    cout << delta << endl;
+    cout << ans << endl;
 
 
 }
