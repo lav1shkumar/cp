@@ -33,10 +33,6 @@ int32_t main(){
     int maxr = q[0].first.second;
     int previdx = q[0].second;
 
-    for(int i=0;i<n;++i){
-        cout<<q[i].first.first << " "<<q[i].first.second <<endl;
-    }
-
     for(int i=1;i<n;++i){
         if(q[i].first.second<=maxr){
             cout << q[i].second<< " "<<previdx<<endl;
