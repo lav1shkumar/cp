@@ -50,19 +50,21 @@ can be make some ans, thats the question then we can bs
 vector<int> arr;
 
 bool check(int x,int k){
+    int maxi = *max_element(arr.begin(),arr.end());
+    if(x<=maxi) return true;
 
     int n=arr.size();
-    for(int i=0;i<n-1;++i){
+    for(int i=0;i<n;++i){
         // make arr[i]==x rest x-2,x-2,x-3 and so on
         int req_k=0;
-        int req_num=x;
-        for(int j=i;j<n-1;++j){
-            if(arr[j]>req_num) continue;
-            req_k+=(req_num-arr[j]);
-            req_num--;
+        for(int j=i,y=x;j<n;++j,y--){
+            if(arr[j]>=y) break;
+            req_k+=y-arr[j];
+            if(j==n-1) req_k+=1e9;
         }
         if(req_k<=k) return true;
     }
+    
     return false;
 }
 
@@ -72,18 +74,16 @@ void solve(){
     arr.assign(n,0);
     for(int i=0;i<n;++i) cin>>arr[i];
     
-    int i=0,j=1e8+1;
-    
-    while(j>i){
-        int mid=(i+j)/2;
+    int i=1,j=2*(1e8+1);
 
+    while(j>i){
+        int mid=(i+j+1)/2;
         if(check(mid,k)) i=mid;
         else j=mid-1;
     }
 
-    cout<<i<<endl;
-
-
+    cout<<j<<endl;
+    //wrong answer 30th numbers differ - expected: '100000001', found: '100000000'
 
 }
 
