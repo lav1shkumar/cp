@@ -49,12 +49,16 @@ void solve(){
     for(int i=0;i<26;++i){
         mp.push_back({freq[i],i});
     }
-    sort(mp.rbegin(),mp.rend());
+    sort(mp.begin(),mp.end(),[](auto &a,auto &b){
+        if(a.first!=b.first) return a.first>b.first;
+        else return b.second>a.second;
+    });
 
     int unique_ele=0;
     int change = 0;
     int prev=0;
     for(int i=1;i<=26;++i){
+        if(n%i) continue;
         int curr=0;
         for(int j=0;j<i;++j){
             curr+=min(n/i,mp[j].first);
@@ -66,19 +70,30 @@ void solve(){
         }
     }
     // now we have needed unique elements
+    cout<<change<<endl;
     int size = n/unique_ele;
-    cout<<size<<endl;
 
-    for(char &c:s){
-        if(freq[c-'a']!=size){
-            c=' ';
+    map<char,int> mp1;
+	for (int i=0;i<unique_ele;++i) mp1[char(mp[i].second+'a')]=size;
+
+    string ans(n,' ');
+    for(int i=0;i<n;++i){
+        if(mp1[s[i]]>0){
+            ans[i]=s[i];
+            mp1[s[i]]--;
         }
     }
-
-    for(char c:s) cout<<c<<" ";
-
-
-
+    // now assign
+    for(char &c:ans){
+        if(c==' '){
+            while(!mp1.empty() && (*mp1.begin()).second==0) mp1.erase(mp1.begin());
+            char newc=(*mp1.begin()).first;
+            c=newc;
+            mp1[c]--;
+        }
+        cout<<c;
+    }
+    cout<<endl;
 
 }
 
