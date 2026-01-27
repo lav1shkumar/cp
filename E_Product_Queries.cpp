@@ -15,52 +15,38 @@ i need to see if arr has one
 
 i can do bfs as edge cost 1
 
+6 == 1x6 , 2x3 , 3x2 so i can use sieve
+1 to n, then 2*i till max until j/i<=i
+
 */
 
 
 void solve(){
     int n;cin>>n;
-    vector<int> arr(n);
     bool has_one=false;
+    vector<int> arr(n+1,LLONG_MAX);
+
 
     for(int i=0;i<n;++i){
-        cin>>arr[i];
-        if(arr[i]==1) has_one=true;
+        int x;cin>>x;
+        arr[x]=1;
     }
 
-    sort(arr.begin(),arr.end());
-    arr.erase(unique(arr.begin(),arr.end()),arr.end());
 
-
-    vector<int> unique_elements;
-    for(int x:arr) if(x>1 && x<=n) unique_elements.push_back(x);
-
-    vector<int> dist(n+1,-1);
-    queue<int> q;
-    for(int x:unique_elements){
-        if(dist[x]==-1){
-            dist[x]=1;
-            q.push(x);
+    for(int i=1;i<=n;++i){
+        if(arr[i]==LLONG_MAX) continue;
+        for(int j=2*i;j<=n;j+=i){
+            if(arr[j/i]==LLONG_MAX) continue;
+            arr[j]=min(arr[j],arr[j/i]+arr[i]);
         }
     }
 
-    if(has_one) dist[1]=1;
-    while(!q.empty()){
-        int u= q.front();
-        q.pop();
-
-        for(int v:unique_elements){
-            if(u>(n/v)) break;
-            int next=u*v;
-
-            if(dist[next]==-1){
-                dist[next]=dist[u]+1;
-                q.push(next);
-            }
-        }
+    for(int i=1;i<=n;++i){
+        if(arr[i]==LLONG_MAX) arr[i]=-1;
+        cout<<arr[i]<<" ";
     }
-    for(int i=1;i<=n;++i) cout<<dist[i]<<" ";
     cout<<endl;
+
 }
 
 int32_t main(){

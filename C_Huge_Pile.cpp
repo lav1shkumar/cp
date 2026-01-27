@@ -24,7 +24,7 @@ void solve(){
     int l=n,r=n;
     
     while (r >= x) {
-        if (x >= l && x <= r) {
+        if (x==l || x==r) {
             cout << steps<<endl;
             return;
         }
