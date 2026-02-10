@@ -6,16 +6,20 @@ const int MOD = 1e9+7;
 
 // Observations
 /*
+<<<<<<< HEAD
 pi = pj^i
 pi^i = pj
 p == 1 to n
 
 x^i == y
 y after x
+=======
+>>>>>>> 4dbee24 (Jan)
 
 
 
 
+<<<<<<< HEAD
 011111111
 
 1 1 
@@ -36,10 +40,13 @@ then put 1 to the end
 4 3 2 1
 
 
+=======
+>>>>>>> 4dbee24 (Jan)
 */
 
 
 void solve(){
+<<<<<<< HEAD
     int n;cin>>n;
     vector<int> perm(n);
     for(int i=1;i<=n;++i) perm[i-1]=i;
@@ -49,6 +56,8 @@ void solve(){
 
     for(int val:perm) cout<< val<< " ";
     cout<<endl;
+=======
+>>>>>>> 4dbee24 (Jan)
 
 }
 
