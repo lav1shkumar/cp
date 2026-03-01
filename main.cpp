@@ -6,48 +6,13 @@ const int MOD = 1e9+7;
 
 // Observations
 /*
-min number of ele required to make a*b*c... == i or -1
-lets say i is 6: 1 2  : pairs = 1,6   2,3 
-            
-i == 1, is 1 in arr then 1 else -1
-for others : cnt ai>1 only
-i need to see if arr has one
 
-i can do bfs as edge cost 1
+
+
 
 */
 
 
-void solve(){
-    int n;cin>>n;
-    bool has_one=false;
-    vector<int> arr(1e6,LLONG_MIN);
-
-
-    for(int i=0;i<n;++i){
-        int x;cin>>x;
-        arr[x]=1;
-    }
-
-
-    for(int i=1;i<=n;++i){
-        if(arr[i]==LLONG_MIN) continue;
-        for(int j=2*i;j<1e6 && (j/i)<=i ;j+=i){
-            arr[j]=max(arr[j],arr[j/i]+arr[i]);
-        }
-    }
-
-    for(int i=1;i<=n;++i){
-        if(arr[i]==LLONG_MIN) arr[i]=-1;
-        cout<<arr[i]<<" ";
-    }
-    cout<<endl;
-
-
-
-
-
-}
 
 int32_t main(){
 
@@ -59,7 +24,49 @@ int32_t main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
-    int t; cin >> t;
-    while(t--) solve();
+
+    int n;cin>>n;
+
+    vector<int> a(n);
+    for(int i=0;i<n;++i) cin>>a[i];
+
+    int s=0;
+    int count=0;
+        
+    set<int> st;
+    vector<int> ans;
+
+    for(int i=0;i<n;++i){
+        int v=a[i];
+        s+=v;
+        if(v<0 && st.count(abs(v))==0){
+            cout<<-1<<endl;
+            return 0;
+        }
+
+        if(st.count(v)){
+            cout<<-1<<endl;
+            return 0;
+        } 
+
+        st.insert(v);
+
+        if(s==0){
+            ans.push_back(st.size());
+            count++;
+            st.clear();
+        }
+
+    }
+
+    if(s!=0){
+        cout<<-1<<endl;
+        return 0;
+
+    }
+
+    cout<<count<<endl;
+
+    for(int v:ans) cout<<v<<" ";
 
 }
