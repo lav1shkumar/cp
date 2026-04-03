@@ -11,8 +11,6 @@ const int MOD = 1e9+7;
 
 
 */
-// sum and range updates(lazy)
-
 struct Node{
     int cnt;
     Node* arr[2];
@@ -50,6 +48,7 @@ struct Trie{
 
     int query(int x){
         int ans=0;
+
         Node* cur = root;
         for(int b=32;b>=0;--b){
             int bit = (x>>b)&1;
@@ -80,8 +79,6 @@ struct Trie{
 };
 
 
-
-
 int32_t main(){
 
 #ifdef lav1sh
@@ -93,15 +90,30 @@ int32_t main(){
     cin.tie(0);
     cout.tie(0);
 
-    vector<int> arr = {1,4,2,7,5,9,8,3,5,7};
-    int n=arr.size();
+    int n;cin>>n;
 
-    Trie tri();
-    
+    vector<int> a(n);
+    for(int i=0;i<n;++i) cin>>a[i];
+
+    // xor at pos, pref xor max
+    vector<int> pref(n);
+    pref[0]=a[0];
+    for(int i=1;i<n;++i) pref[i]= pref[i-1]^a[i];
+
+    Trie trie;
+    trie.add(0);
+
+    int maxi=INT_MIN;
+    for(int r=0;r<n;++r){
+        int x = trie.query(pref[r]);
+
+        trie.add(pref[r]);
+        maxi=max(maxi,x);
+    }
+
+    cout<<maxi<<endl;
 
 
-    cout<<seg.query(1,0,n-1,0,4)<<endl;
-    seg.update(1,0,n-1,0,4,1);
-    cout<<seg.query(1,0,n-1,0,4)<<endl;
+
 
 }
