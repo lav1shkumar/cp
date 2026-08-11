@@ -1,107 +1,39 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <thread>
+#include <chrono>
 using namespace std;
-#define int long long
-const int MOD = 1e9+7;
 
+void task1() {
+    cout << "Thread 1 is running. ID: " << this_thread::get_id() << "\n";
+}
 
-// Observations
-/*
+void task2() {
+    cout << "Thread 2 is running. ID: " << this_thread::get_id() << "\n";
+}
 
+int main() {
+    thread t1(task1);
+    thread t2(task2);
 
+    // Get thread IDs
+    cout << "t1 ID: " << t1.get_id() << "\n";
+    cout << "t2 ID: " << t2.get_id() << "\n";
 
-
-*/
-// sum and range updates(lazy)
-
-struct Node{
-    int cnt;
-    Node* arr[2];
-
-    Node(){
-        cnt=0;
-        arr[0]=arr[1]=NULL;
+    // Join t1 if joinable
+    if (t1.joinable()) {
+        t1.join();
+        cout << "t1 joined\n";
     }
 
-
-};
-
-struct Trie{
-    Node* root;
-    Trie(){
-        root=new Node();
+    // Detach t2 if joinable
+    if (t2.joinable()) {
+        t2.detach();
+        cout << "t2 detached\n";
     }
 
+    // Give detached thread time to complete
+    this_thread::sleep_for(chrono::milliseconds(100));
 
-
-    void add(int x){
-        Node* cur = root;
-        for(int b=32;b>=0;--b){
-            int bit = (x>>b)&1;
-
-            if(cur->arr[bit]==NULL){
-                cur->arr[bit]=new Node();
-            }
-
-            cur=cur->arr[bit];
-            cur->cnt++;
-
-        }
-    }
-
-    int query(int x){
-        int ans=0;
-        Node* cur = root;
-        for(int b=32;b>=0;--b){
-            int bit = (x>>b)&1;
-
-            if(cur->arr[!bit]==NULL || cur->arr[!bit]->cnt<=0){
-                cur=cur->arr[bit];
-            }
-            else{
-                cur=cur->arr[!bit];
-                ans|=(1<<b);
-            }
-
-        }
-
-        return ans;
-    }
-
-    void remove(int x){
-        Node* cur = root;
-        for(int b=32;b>=0;--b){
-            int bit = (x>>b)&1;
-            cur=cur->arr[bit];
-            cur->cnt--;
-        }
-
-    }
-
-};
-
-
-
-
-int32_t main(){
-
-#ifdef lav1sh
-    freopen("input.txt","r",stdin);
-    freopen("output.txt","w",stdout);
-#endif
-
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
-
-    vector<int> arr = {1,4,2,7,5,9,8,3,5,7};
-    int n=arr.size();
-
-    Trie tri();
-    
-
-
-    cout<<seg.query(1,0,n-1,0,4)<<endl;
-    seg.update(1,0,n-1,0,4,1);
-    cout<<seg.query(1,0,n-1,0,4)<<endl;
-
+    cout << "Main thread finished.\n";
+    return 0;
 }
