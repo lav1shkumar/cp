@@ -2,38 +2,110 @@
 #include <thread>
 #include <chrono>
 using namespace std;
+#define int long long
+const int MOD = 1e9+7;
 
-void task1() {
-    cout << "Thread 1 is running. ID: " << this_thread::get_id() << "\n";
-}
 
-void task2() {
-    cout << "Thread 2 is running. ID: " << this_thread::get_id() << "\n";
-}
+// Observations
+/*
+dp[i] == max possible score by choosing some subset of rectangles till i
 
-int main() {
-    thread t1(task1);
-    thread t2(task2);
+*/
 
-    // Get thread IDs
-    cout << "t1 ID: " << t1.get_id() << "\n";
-    cout << "t2 ID: " << t2.get_id() << "\n";
+struct Line {
+    int s,i;
 
-    // Join t1 if joinable
-    if (t1.joinable()) {
-        t1.join();
-        cout << "t1 joined\n";
+    Line(int slope,int intercept){
+        this->s=slope;
+        this->i=intercept;
     }
 
-    // Detach t2 if joinable
-    if (t2.joinable()) {
-        t2.detach();
-        cout << "t2 detached\n";
+};
+
+struct Hull{
+    vector<pair<int,Line>> v;
+
+    void insert(int slope,int intercept){
+
+        while(!v.empty()){
+            auto a = v.back();
+
+            if(slope!=a.second.s){
+                int x = (a.second.i-intercept)/(slope-a.second.s);
+
+                if(x>=v.back().first) v.pop_back();
+                else break;
+            }
+            else{
+                if(intercept<=a.second.i) return;
+                v.pop_back();
+            }
+        }
+
+        if(v.empty()){
+            v.push_back({LLONG_MIN,Line(slope,intercept)});
+        }
+        else{
+            auto a = v.back();
+            int x = (a.second.i-intercept)/(slope-a.second.s);
+            v.push_back({x,Line(slope,intercept)});
+        }
     }
 
-    // Give detached thread time to complete
-    this_thread::sleep_for(chrono::milliseconds(100));
 
-    cout << "Main thread finished.\n";
-    return 0;
+    int query(int x){
+        if (v.empty()) return 0;
+
+        auto t = *--upper_bound(v.begin(),v.end(),x,[](auto &x,auto &a){
+            return x<a.first;
+        });
+
+        auto line = t.second;
+        return x*line.s+line.i;
+    }
+
+};
+
+
+
+int32_t main(){
+
+#ifdef lav1sh
+    freopen("input.txt","r",stdin);
+    freopen("output.txt","w",stdout);
+#endif
+
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    int n; cin >> n;
+
+    vector<tuple<int,int,int>> v;
+
+    for(int i=0;i<n;++i){
+        int a,b,c;cin>>a>>b>>c;
+        v.push_back({a,b,c});
+    }
+
+    sort(v.begin(),v.end());
+    Hull hull;
+
+
+    vector<int> dp(n+1,0);
+
+    int ans=0;
+
+    for(int i=0;i<n;++i){
+        auto [x,y,a] = v[i];
+
+        dp[i] = hull.query(y)-a+x*y;
+        dp[i] = max(dp[i],-a+x*y);
+
+        ans=max(ans,dp[i]);
+
+        hull.insert(-x,dp[i]);
+    }
+
+
+    cout<<ans<<endl;
 }
